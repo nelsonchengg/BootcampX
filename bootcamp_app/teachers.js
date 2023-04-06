@@ -9,11 +9,12 @@ const pool = new Pool({
 });
 
 pool.query(`
-SELECT students.id as id, students.name as name, cohorts.name
-FROM students
-JOIN cohorts ON cohorts.id = cohort_id
-WHERE cohorts.name LIKE '%${args[0]}%'
-LIMIT ${args[1] || 5};
+SELECT DISTINCT teachers.name as name, cohorts.name as cohort
+FROM assistance_requests
+JOIN students ON students.id = student_id
+JOIN teachers ON teachers.id = teacher_id
+JOIN cohorts ON cohorts.id = students.cohort_id
+WHERE cohorts.name LIKE '%${args[0]}%';
 `)
 .then(res => {
   console.log(res.rows);
